@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.easybuy.dao.user.UserDao">
+	<resultMap type="User" id="userList">
+		<result property="id" column="id"/>
+		<result property="loginName" column="loginName"/>
+		<result property="userName" column="userName"/>
+		<result property="password" column="password"/>
+		<result property="sex" column="sex"/>
+		<result property="identityCode" column="identityCode"/>
+		<result property="email" column="email"/>
+		<result property="mobile" column="mobile"/>
+		<result property="type" column="type"/>
+	</resultMap>
+	
+	<!-- 根据登录名查询用户信息 -->
+	<select id="getUser" resultMap="userList">
+		select id,loginName,userName,password,sex,
+				identityCode,email,mobile,type 
+		from easybuy_user where 1=1
+			<if test="id != null and id != ''">
+				and id=#{id}			
+			</if>
+			<if test="loginName != null and loginName != ''">
+				and loginName=#{loginName}
+			</if>		
+	</select>
+	
+	<!-- 添加用户信息 -->	
+	<insert id="add" parameterType="User">
+		INSERT into easybuy_user(loginName,userName,password,
+									sex,identityCode,email,mobile) 
+		values (#{loginName},#{userName},#{password},#{sex},
+					#{identityCode},#{email},#{mobile})
+	</insert>
+	
+	<!-- 获得用户数量 -->
+	<select id="count" resultType="Integer">
+		select count(*) count from easybuy_user where 1=1
+	</select>
+	
+	<!-- 分页显示用户信息 -->
+	<select id="getUserList" resultMap="userList">
+		select id,loginName,password,userName,sex,identityCode,
+				email,mobile,type from easybuy_user 
+		where 1=1
+		limit #{currentPageNo}, #{pageSize}
+	</select>
+	
+	<!-- 修改用户信息 -->
+	<update id="update" parameterType="User">
+		update easybuy_user
+		<trim prefix="set" suffixOverrides="," suffix="where id =#{id}">
+			<if test="loginName != null">loginName = #{loginName},</if>
+			<if test="userName != null">userName = #{userName},</if>
+			<if test="type != null">type = #{type},</if>
+			<if test="sex != null">sex = #{sex},</if>
+			<if test="identityCode != null">identityCode = #{identityCode},</if>
+			<if test="email != null">email = #{email},</if>
+			<if test="mobile != null">mobile = #{mobile},</if>
+		</trim> 
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
